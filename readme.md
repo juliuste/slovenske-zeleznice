@@ -7,7 +7,7 @@ Client for the [Slovenske železnice](http://www.slo-zeleznice.si/) (SŽ, Sloven
 [![Greenkeeper badge](https://badges.greenkeeper.io/juliuste/slovenske-zeleznice.svg)](https://greenkeeper.io/)
 [![dependency status](https://img.shields.io/david/juliuste/slovenske-zeleznice.svg)](https://david-dm.org/juliuste/slovenske-zeleznice)
 [![dev dependency status](https://img.shields.io/david/dev/juliuste/slovenske-zeleznice.svg)](https://david-dm.org/juliuste/slovenske-zeleznice#info=devDependencies)
-[![license](https://img.shields.io/github/license/juliuste/sslovenske-zeleznice.svg?style=flat)](LICENSE)
+[![license](https://img.shields.io/github/license/juliuste/slovenske-zeleznice.svg?style=flat)](LICENSE)
 [![chat on gitter](https://badges.gitter.im/juliuste.svg)](https://gitter.im/juliuste)
 
 ## Installation
