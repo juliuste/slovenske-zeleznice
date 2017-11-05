@@ -1,0 +1,49 @@
+{
+	"name": "slovenske-zeleznice",
+	"description": "Slovenske železnice (SŽ, Slovenian Railways) API client.",
+	"version": "0.0.0",
+	"keywords": [
+		"sz",
+		"slo",
+		"slo-zeleznice",
+		"slovenske",
+		"zeleznice",
+		"slovenia",
+		"si",
+		"railway",
+		"train",
+		"api",
+		"client"
+	],
+	"author": "Julius Tens <mail@juliustens.de>",
+	"homepage": "https://github.com/juliuste/slovenske-zeleznice",
+	"repository": "juliuste/slovenske-zeleznice",
+	"bugs": "https://github.com/juliuste/slovenske-zeleznice/issues",
+	"main": "./index.js",
+	"files": [
+		"./index.js",
+		"./lib"
+	],
+	"dependencies": {
+		"easysoap": "^1.0.6",
+		"lodash.isdate": "^4.0.1",
+		"lodash.isnumber": "^3.0.3",
+		"lodash.isstring": "^4.0.1",
+		"lodash.merge": "^4.6.0",
+		"moment": "^2.19.1",
+		"moment-duration-format": "^1.3.0",
+		"moment-timezone": "^0.5.14"
+	},
+	"devDependencies": {
+		"lodash.isobject": "^3.0.2",
+		"tape": "^4.8.0"
+	},
+	"scripts": {
+		"test": "node test.js",
+		"prepare": "npm test"
+	},
+	"engines": {
+		"node": ">=8"
+	},
+	"license": "ISC"
+}
