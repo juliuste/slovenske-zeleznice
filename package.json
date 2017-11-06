@@ -1,7 +1,7 @@
 {
 	"name": "slovenske-zeleznice",
 	"description": "Slovenske železnice (SŽ, Slovenian Railways) API client.",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"keywords": [
 		"sz",
 		"slo",
@@ -21,8 +21,8 @@
 	"bugs": "https://github.com/juliuste/slovenske-zeleznice/issues",
 	"main": "./index.js",
 	"files": [
-		"./index.js",
-		"./lib"
+		"index.js",
+		"lib/*"
 	],
 	"dependencies": {
 		"easysoap": "^1.0.6",
