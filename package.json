@@ -25,7 +25,7 @@
 		"lib/*"
 	],
 	"dependencies": {
-		"easysoap": "^1.0.6",
+		"easysoap": "^2.0.0",
 		"lodash.isdate": "^4.0.1",
 		"lodash.isnumber": "^3.0.3",
 		"lodash.isstring": "^4.0.1",
