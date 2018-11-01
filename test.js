@@ -16,7 +16,7 @@ tape('sz', async (t) => {
 	// stations
 	const stations = await sz.stations()
 	t.ok(stations.length > 20, 'stations length')
-	const ljubljana = stations.find((x) => x.name.indexOf('Ljubljana')>=0)
+	const ljubljana = stations.find((x) => x.name.indexOf('Ljubljana') >= 0)
 	t.ok(ljubljana.type === 'station', 'station type')
 	t.ok(isString(ljubljana.id) && ljubljana.id.length > 4, 'station id')
 	t.ok(isString(ljubljana.name) && ljubljana.name.length > 4, 'station name')
@@ -24,12 +24,12 @@ tape('sz', async (t) => {
 	const date = moment.tz('Europe/Ljubljana').add(3, 'days').toDate()
 
 	// journeys
-	const maribor = stations.find((x) => x.name.indexOf('Maribor')>=0)
+	const maribor = stations.find((x) => x.name.indexOf('Maribor') >= 0)
 	const journeys = await sz.journeys(maribor, ljubljana, date)
 	t.ok(journeys.length >= 1, 'journeys length')
 	const journey = journeys[0]
 	t.ok(journey.type === 'journey', 'journey type')
-	if(isObject(journey.price)){
+	if (isObject(journey.price)) {
 		t.ok(isNumber(journey.price.amount) && journey.price.amount > 0, 'journey price amount')
 		t.ok(journey.price.currency === 'EUR', 'journey price currency')
 		// todo: price.fares
