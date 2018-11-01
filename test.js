@@ -1,11 +1,13 @@
 
-const tape = require('tape')
-const sz = require('.')
+const tapeWithoutPromise = require('tape')
+const addPromiseSupport = require('tape-promise').default
+const tape = addPromiseSupport(tapeWithoutPromise)
 const isString = require('lodash.isstring')
 const isNumber = require('lodash.isnumber')
 const isDate = require('lodash.isdate')
 const isObject = require('lodash.isobject')
 const moment = require('moment-timezone')
+const sz = require('.')
 
 const isStation = (s) => s.type === 'station' && isString(s.id) && s.id.length > 4 && isString(s.name) && s.name.length > 1 // && isNumber(s.coordinates.longitude) && isNumber(s.coordinates.latitude)
 const isTrainStop = (s) => isStation(s) && isDate(s.arrival) && isDate(s.departure) && +s.departure >= +s.arrival
