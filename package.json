@@ -1,29 +1,36 @@
 {
 	"name": "slovenske-zeleznice",
-	"description": "Slovenske železnice (SŽ, Slovenian Railways) API client.",
 	"version": "0.0.1",
+	"description": "Slovenske železnice (SŽ, Slovenian Railways) API client.",
 	"keywords": [
-		"sz",
+		"api",
+		"client",
+		"railway",
+		"si",
 		"slo",
 		"slo-zeleznice",
-		"slovenske",
-		"zeleznice",
 		"slovenia",
-		"si",
-		"railway",
+		"slovenske",
+		"sz",
 		"train",
-		"api",
-		"client"
+		"zeleznice"
 	],
-	"author": "Julius Tens <mail@juliustens.de>",
 	"homepage": "https://github.com/juliuste/slovenske-zeleznice",
-	"repository": "juliuste/slovenske-zeleznice",
 	"bugs": "https://github.com/juliuste/slovenske-zeleznice/issues",
-	"main": "./index.js",
+	"repository": "juliuste/slovenske-zeleznice",
+	"license": "ISC",
+	"author": "Julius Tens <mail@juliustens.eu>",
 	"files": [
-		"index.js",
 		"lib/*"
 	],
+	"main": "lib/index.js",
+	"scripts": {
+		"check-deps": "depcheck",
+		"fix": "eslint --fix lib test.js",
+		"lint": "eslint lib test.js",
+		"prepublishOnly": "npm test",
+		"test": "npm run lint && npm run check-deps && node test"
+	},
 	"dependencies": {
 		"easysoap": "^1.0.6",
 		"lodash.isdate": "^4.0.1",
@@ -35,15 +42,18 @@
 		"moment-timezone": "^0.5.14"
 	},
 	"devDependencies": {
+		"depcheck": "^0.6.11",
+		"eslint": "^5.8.0",
+		"eslint-config-standard": "^12.0.0",
+		"eslint-plugin-import": "^2.14.0",
+		"eslint-plugin-node": "^8.0.0",
+		"eslint-plugin-promise": "^4.0.1",
+		"eslint-plugin-standard": "^4.0.0",
 		"lodash.isobject": "^3.0.2",
-		"tape": "^4.8.0"
-	},
-	"scripts": {
-		"test": "node test.js",
-		"prepare": "npm test"
+		"tape": "^4.9.1",
+		"tape-promise": "^4.0.0"
 	},
 	"engines": {
 		"node": ">=8"
-	},
-	"license": "ISC"
+	}
 }

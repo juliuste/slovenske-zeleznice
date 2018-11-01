@@ -1,6 +1,6 @@
 
 const tape = require('tape')
-const sz = require('./index')
+const sz = require('.')
 const isString = require('lodash.isstring')
 const isNumber = require('lodash.isnumber')
 const isDate = require('lodash.isdate')
