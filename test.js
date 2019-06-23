@@ -97,6 +97,21 @@ tape('slovenske-zeleznice.journeys opt.interval', async t => {
 	t.ok(journeysWithIntervalDayAfterWhen.length > 0, 'number of journeys')
 })
 
-// 	// timetable
-// 	const timetable = await sz.timetable(leg.trainNumber, leg.origin, leg.destination, date)
-// 	t.ok(timetable.every(isTrainStop), 'train stops')
+tape('slovenske-zeleznice.legStopovers', async (t) => {
+	const ljubljana = '42300'
+	const maribor = '43400'
+
+	const journeys = await sz.journeys(ljubljana, maribor, { when, transfers: 0 })
+	const legId = journeys[0].legs[0].id
+	t.ok(typeof legId === 'string' && legId.length > 0, 'precondition')
+
+	const legStopovers = await sz.legStopovers(legId)
+	t.ok(legStopovers.length > 4, 'number of stopovers')
+	legStopovers.forEach((stopover, index) => {
+		t.doesNotThrow(() => validate(stopover), 'valid fptf')
+		const lastStopover = legStopovers[index - 1]
+		if (lastStopover) {
+			t.ok(+new Date(stopover.arrival) >= +new Date(lastStopover.departure), 'stopover order')
+		}
+	})
+})
