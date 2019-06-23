@@ -2,11 +2,7 @@
 const tapeWithoutPromise = require('tape')
 const addPromiseSupport = require('tape-promise').default
 const tape = addPromiseSupport(tapeWithoutPromise)
-// const isString = require('lodash/isString')
-// const isNumber = require('lodash/isNumber')
-// const isDate = require('lodash/isDate')
-// const isObject = require('lodash/isObject')
-// const moment = require('moment-timezone')
+const { DateTime } = require('luxon')
 const validate = require('validate-fptf')()
 const fptiTests = require('fpti-tests')
 const getStream = require('get-stream').array
@@ -14,10 +10,14 @@ const getStream = require('get-stream').array
 const sz = require('.')
 const pkg = require('./package.json')
 
+const when = DateTime.fromObject({ zone: 'Europe/Ljubljana', weekday: 4 }).plus({ weeks: 1, hours: 5 }).toJSDate() // next thursday, 05:00
+const isStationWithName = (s, name) => (s.type === 'station' && s.name === name)
+
 tape('slovenske-zeleznice fpti tests', async t => {
 	await t.doesNotReject(fptiTests.packageJson(pkg), 'valid package.json')
 	t.doesNotThrow(() => fptiTests.packageExports(sz, ['stations.all', 'journeys']), 'valid module exports')
 	t.doesNotThrow(() => fptiTests.stationsAllFeatures(sz.stations.all.features, []), 'valid stations.all features')
+	t.doesNotThrow(() => fptiTests.journeysFeatures(sz.journeys.features, ['when', 'departureAfter', 'results', 'interval', 'transfers']), 'valid journeys features')
 })
 
 tape('slovenske-zeleznice.stations.all', async t => {
@@ -32,49 +32,71 @@ tape('slovenske-zeleznice.stations.all', async t => {
 	t.ok(!!ljubljana, 'ljubljana')
 })
 
-// const isStation = (s) => s.type === 'station' && isString(s.id) && s.id.length > 4 && isString(s.name) && s.name.length > 1 // && isNumber(s.coordinates.longitude) && isNumber(s.coordinates.latitude)
-// const isTrainStop = (s) => isStation(s) && isDate(s.arrival) && isDate(s.departure) && +s.departure >= +s.arrival
+tape('slovenske-zeleznice.journeys', async t => {
+	const ljubljana = '42300'
+	const maribor = '43400'
 
-// const isSZ = (o) => o.type === 'operator' && o.id === 'sž' && o.name === 'Slovenske železnice' && o.url === 'http://www.slo-zeleznice.si'
+	const journeys = await sz.journeys(ljubljana, maribor, { when })
+	t.ok(journeys.length >= 3, 'number of journeys')
+	for (let journey of journeys) {
+		t.doesNotThrow(() => validate(journey), 'valid fptf')
+		t.ok(isStationWithName(journey.legs[0].origin, 'Ljubljana'), 'origin')
+		t.ok(isStationWithName(journey.legs[journey.legs.length - 1].destination, 'Maribor'), 'destination')
+		t.ok(+new Date(journey.legs[0].departure) >= +when, 'departure')
 
-// tape('sz', async (t) => {
-// 	// stations
-// 	const stations = await sz.stations()
-// 	t.ok(stations.length > 20, 'stations length')
-// 	const ljubljana = stations.find((x) => x.name.indexOf('Ljubljana') >= 0)
-// 	t.ok(ljubljana.type === 'station', 'station type')
-// 	t.ok(isString(ljubljana.id) && ljubljana.id.length > 4, 'station id')
-// 	t.ok(isString(ljubljana.name) && ljubljana.name.length > 4, 'station name')
+		for (let leg of journey.legs) {
+			t.ok(leg.operator.id === 'sž', 'leg operator')
+			t.doesNotThrow(() => validate(leg.line), 'valid fptf')
+			t.ok(leg.line.operator.id === 'sž', 'leg line operator')
+		}
 
-// 	const date = moment.tz('Europe/Ljubljana').add(3, 'days').toDate()
+		t.ok(journey.price.amount > 0, 'price amount')
+		t.ok(journey.price.currency === 'EUR', 'price currency')
+	}
+})
 
-// 	// journeys
-// 	const maribor = stations.find((x) => x.name.indexOf('Maribor') >= 0)
-// 	const journeys = await sz.journeys(maribor, ljubljana, date)
-// 	t.ok(journeys.length >= 1, 'journeys length')
-// 	const journey = journeys[0]
-// 	t.ok(journey.type === 'journey', 'journey type')
-// 	if (isObject(journey.price)) {
-// 		t.ok(isNumber(journey.price.amount) && journey.price.amount > 0, 'journey price amount')
-// 		t.ok(journey.price.currency === 'EUR', 'journey price currency')
-// 		// todo: price.fares
-// 	}
-// 	t.ok(journey.legs.length >= 1, 'journey legs length')
-// 	const leg = journey.legs.find((x) => !!x.product)
-// 	t.ok(isStation(leg.origin), 'journey leg origin')
-// 	t.ok(isStation(leg.destination), 'journey leg destination')
-// 	t.ok(isDate(leg.arrival), 'journey leg arrival')
-// 	t.ok(isDate(leg.departure), 'journey leg departure')
-// 	t.ok(+leg.arrival >= +leg.departure, 'journey leg arrival > departure')
-// 	t.ok(isString(leg.trainNumber) && leg.trainNumber.length > 0, 'journey leg trainNumber')
-// 	t.ok(isString(leg.product) && leg.product.length > 0, 'journey leg product')
-// 	t.ok(isSZ(leg.operator), 'journey leg operator')
-// 	t.ok(leg.mode === 'train', 'journey leg mode')
-// 	t.ok(leg.public === true, 'journey leg public')
+tape('slovenske-zeleznice.journeys opt.results, opt.departureAfter', async t => {
+	const ljubljana = '42300'
+	const maribor = '43400'
+
+	const journeys = await sz.journeys(ljubljana, maribor, { departureAfter: when, results: 2 })
+	t.ok(journeys.length === 2, 'number of journeys')
+	for (let journey of journeys) t.doesNotThrow(() => validate(journey), 'valid fptf')
+})
+
+tape('slovenske-zeleznice.journeys opt.transfers', async t => {
+	const ljubljanaStegne = '42317'
+	const maribor = '43400'
+
+	const journeysWithoutTransfer = await sz.journeys(ljubljanaStegne, maribor, { when, transfers: 0 })
+	t.ok(journeysWithoutTransfer.length === 0, 'number of journeys')
+
+	const journeysWithTransfer = await sz.journeys(ljubljanaStegne, maribor, { when, transfers: 2 })
+	t.ok(journeysWithTransfer.length > 0, 'number of journeys')
+	for (let journey of journeysWithTransfer) {
+		t.doesNotThrow(() => validate(journey), 'valid fptf')
+		t.ok(journey.legs.length >= 2, 'number of legs')
+	}
+})
+
+tape('slovenske-zeleznice.journeys opt.interval', async t => {
+	const ljubljanaStegne = '42317'
+	const maribor = '43400'
+	const dayAfterWhen = DateTime.fromJSDate(when, { zone: 'Europe/Ljubljana' }).plus({ days: 1 }).toJSDate()
+
+	const journeysWithoutInterval = await sz.journeys(ljubljanaStegne, maribor, { when })
+	for (let journey of journeysWithoutInterval) t.doesNotThrow(() => validate(journey), 'valid fptf')
+	t.ok(journeysWithoutInterval.length > 0, 'precondition')
+	const journeysWithoutIntervalDayAfterWhen = journeysWithoutInterval.filter(journey => +new Date(journey.legs[0].departure) >= +dayAfterWhen)
+	t.ok(journeysWithoutIntervalDayAfterWhen.length === 0, 'number of journeys')
+
+	const journeysWithInterval = await sz.journeys(ljubljanaStegne, maribor, { when, interval: 30 * 60 }) // journeys for the next 30h
+	for (let journey of journeysWithInterval) t.doesNotThrow(() => validate(journey), 'valid fptf')
+	t.ok(journeysWithInterval.length > 0, 'precondition')
+	const journeysWithIntervalDayAfterWhen = journeysWithInterval.filter(journey => +new Date(journey.legs[0].departure) >= +dayAfterWhen)
+	t.ok(journeysWithIntervalDayAfterWhen.length > 0, 'number of journeys')
+})
 
 // 	// timetable
 // 	const timetable = await sz.timetable(leg.trainNumber, leg.origin, leg.destination, date)
 // 	t.ok(timetable.every(isTrainStop), 'train stops')
-
-// 	t.end()
-// })
