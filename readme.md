@@ -5,8 +5,6 @@ Client for the [Slovenske železnice](http://www.slo-zeleznice.si/) (SŽ, Sloven
 [![npm version](https://img.shields.io/npm/v/slovenske-zeleznice.svg)](https://www.npmjs.com/package/slovenske-zeleznice)
 [![Build Status](https://travis-ci.org/juliuste/slovenske-zeleznice.svg?branch=master)](https://travis-ci.org/juliuste/slovenske-zeleznice)
 [![Greenkeeper badge](https://badges.greenkeeper.io/juliuste/slovenske-zeleznice.svg)](https://greenkeeper.io/)
-[![dependency status](https://img.shields.io/david/juliuste/slovenske-zeleznice.svg)](https://david-dm.org/juliuste/slovenske-zeleznice)
-[![dev dependency status](https://img.shields.io/david/dev/juliuste/slovenske-zeleznice.svg)](https://david-dm.org/juliuste/slovenske-zeleznice#info=devDependencies)
 [![license](https://img.shields.io/github/license/juliuste/slovenske-zeleznice.svg?style=flat)](LICENSE)
 [![chat on gitter](https://badges.gitter.im/juliuste.svg)](https://gitter.im/juliuste)
 
@@ -26,4 +24,4 @@ This package mostly returns data in the [*Friendly Public Transport Format*](htt
 
 ## Contributing
 
-If you found a bug, want to propose a feature or feel the urge to complain about your life, feel free to visit [the issues page](https://github.com/juliuste/slovenske-zeleznice/issues).
+If you found a bug or want to propose a feature, feel free to visit [the issues page](https://github.com/juliuste/slovenske-zeleznice/issues).
