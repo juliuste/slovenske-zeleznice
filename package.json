@@ -35,7 +35,7 @@
 		"easysoap": "^2.2.0",
 		"fpti-util": "^0.1.0",
 		"into-stream": "^5.1.0",
-		"lodash": "^4.17.11",
+		"lodash": "^4.17.15",
 		"luxon": "^1.16.0"
 	},
 	"devDependencies": {
