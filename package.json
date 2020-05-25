@@ -48,7 +48,7 @@
 		"eslint-plugin-standard": "^4.0.0",
 		"fpti-tests": "^0.0.0",
 		"get-stream": "^5.1.0",
-		"tape": "^4.10.2",
+		"tape": "^5.0.1",
 		"tape-promise": "^4.0.0",
 		"validate-fptf": "^3.0.0"
 	},
